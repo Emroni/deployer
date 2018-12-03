@@ -8,13 +8,7 @@ const PATH = 'var/database/';
 const CURRENT_PATH = '{{deploy_path}}/current/' . PATH;
 
 task('database:backup', function () {
-    run('mkdir -p ' . CURRENT_PATH);
-
-    $db = getDatabase();
-    $file = $db->name . '_' . date('ymdhis') . '.sql';
-    $path = CURRENT_PATH . $file;
-
-    run("mysqldump --single-transaction {$db->credentials} {$db->name} > {$path}");
+    createBackup();
 });
 
 task('database:download', function () {
@@ -44,6 +38,17 @@ function getDatabase()
     return (object)compact('user', 'password', 'host', 'port', 'name', 'credentials');
 }
 
+function createBackup()
+{
+    run('mkdir -p ' . CURRENT_PATH);
+
+    $db = getDatabase();
+    $file = $db->name . '_' . date('ymdhis') . '.sql';
+    $path = CURRENT_PATH . $file;
+
+    run("mysqldump --single-transaction {$db->credentials} {$db->name} > {$path}");
+}
+
 function getLastBackup()
 {
     $files = run('ls ' . CURRENT_PATH);
@@ -51,7 +56,7 @@ function getLastBackup()
     $file = end($files);
 
     if (!$file) {
-        throw new \Exception('No backup file found');
+        createBackup();
     }
 
     return $file;
