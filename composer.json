@@ -1,0 +1,7 @@
+{
+    "name": "Emroni/deployer",
+    "description": "Deployer recipes",
+    "require": {
+        "php": "^7.1"
+    }
+}
