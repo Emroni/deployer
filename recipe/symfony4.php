@@ -30,9 +30,9 @@ task('database:pull', function () {
 function getDatabase($local = false)
 {
     if ($local) {
-        $env = runLocally('cat .env');
+        $env = runLocally('cat .env.local .env | grep DATABASE_URL');
     } else {
-        $env = run('cd {{deploy_path}}/current && cat .env');
+        $env = run('cd {{deploy_path}}/current && cat .env.production .env | DATABASE_URL');
     }
 
     preg_match('/^DATABASE_URL=(.*?)$/m', $env, $url);
