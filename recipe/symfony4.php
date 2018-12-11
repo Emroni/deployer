@@ -64,7 +64,7 @@ function createBackup()
     run('mkdir -p ' . CURRENT_PATH);
 
     $db = getDatabase();
-    $file = $db->name . '_' . date('ymdhis') . '.sql';
+    $file = $db->name . '_' . date('Ymdhis') . '.sql';
     $path = CURRENT_PATH . $file;
 
     run("mysqldump --single-transaction {$db->credentials} {$db->name} > {$path}");
@@ -76,7 +76,7 @@ function getLastBackup()
     $files = explode("\n", $files);
     $file = end($files);
 
-    if (!$file) {
+    if (!$file || strpos($file, '_' . date('Ymd')) === false) {
         createBackup();
     }
 
